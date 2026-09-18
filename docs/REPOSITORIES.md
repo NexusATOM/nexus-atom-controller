@@ -13,14 +13,16 @@
 
 ## Using the GEOS specialists
 
-The separate [standalone GEOS Agent](https://github.com/nasa-nccs-hpda/nexus-geos-agent)
-contains the original NOOA specialists, engineering tools, and durable sessions.
-Its [agent usage guide](https://github.com/nasa-nccs-hpda/nexus-geos-agent/blob/main/docs/AGENTS.md)
-explains the six roles, orchestration, tool integration, and runnable examples.
+The [GEOS repository](https://github.com/NexusATOM/nexus-atom-geos) is the canonical
+home of the NOOA specialists, agent CLI, durable sessions, and ATOM GEOS plugin.
+Its [agent usage guide](https://github.com/NexusATOM/nexus-atom-geos/blob/main/docs/AGENTS.md)
+explains all six roles, tool integration, and runnable examples. The agent CLI
+can run without Controller; the shared ATOM libraries remain package dependencies.
 ATOM's Agents package supplies interchangeable proposal backends rather than a
-second copy of those specialist roles. Use separate environments for standalone
-GEOS Agent and the ATOM GEOS distribution because both provide `geos_agents` and
-`geos-agent`. Their persistent-state formats are separate.
+second copy of the specialist roles. Install GEOS with `[nooa]` for specialist
+reasoning. Do not co-install the old `nexus-geos-agent` distribution, which uses
+the same import/CLI names. Agent sessions and Controller experiments have separate
+persistent-state formats.
 
 ## How they connect
 
@@ -58,7 +60,7 @@ The controller does not know how to compile GEOS or how NOOA calls a model. Plug
 
 `atom demo` lives under `nexus_atom_controller.examples.toy` and needs no Earth-system model. ECCO/LIS/ISSM/ModelE toy entry points live in `nexus_atom_geos.examples` for now; they demonstrate the plugin boundary. `examples/multimodel.py` runs two such plugins under one goal. This is orchestration, not physical coupling.
 
-The original [nasa-nccs-hpda/nexus-geos-agent](https://github.com/nasa-nccs-hpda/nexus-geos-agent) was preserved. Its implementation and tests are carried forward in GEOS with provenance and Apache-2.0 attribution. The old repository is not the new control plane.
+The original GEOS Agent implementation, tests, examples, documentation and Git history are migrated into GEOS with Apache-2.0 attribution. Its [migration record](https://github.com/NexusATOM/nexus-atom-geos/blob/main/docs/MIGRATION.md) identifies preserved releases and file coverage; the old repository is no longer required.
 
 Dedicated ECCO/LIS/ISSM/ModelE repositories, data/observations/assimilation packages and UI are deferred, as requested by the plan. Actual Discover GEOS validation remains a separate acceptance milestone. See [implementation status](IMPLEMENTATION.md).
 
