@@ -7,7 +7,6 @@ import time
 from abc import ABC, abstractmethod
 
 from nexus_atom_core import (
-    Artifact,
     Budget,
     CapabilityRegistry,
     Evaluation,
@@ -62,6 +61,7 @@ class Controller:
 
     async def _run(self, goal: Goal, recover: bool) -> dict:
         state = self.store.goal(goal)
+        self.store.reconcile_seals(goal.id)
         history = self.store.history(goal.id)
         # A crash after sealing but before checkpointing is reconciled from evidence.
         if state["active"]:
@@ -79,16 +79,45 @@ class Controller:
             else:
                 active = state["active"]
                 plan = Plan.model_validate(active["plan"])
+                results = self.store.recorded_results(goal.id, active["id"])
+                task_ids = {task.id for task in plan.graph.tasks}
+                if any(result.task_id not in task_ids for result in results):
+                    raise ValueError("Recorded recovery result references an unknown task")
+                reasons = [
+                    "Interrupted experiment; unfinished execution is not assumed to have stopped."
+                ]
+                for result in results:
+                    for artifact in result.artifacts:
+                        if not artifact.verify(self.store.directory(active["id"])):
+                            reasons.append(
+                                f"Recorded task artifact changed or is missing: {result.task_id}: {artifact.path}"
+                            )
                 experiment = Experiment(
                     id=active["id"],
                     goal=goal.id,
                     parent=state["best_valid_candidate"],
                     hypothesis=plan.hypothesis,
                     tasks=plan.graph.tasks,
-                    results=(),
+                    results=results,
+                    artifacts=self.store.snapshot(active["id"]),
+                    evaluations=(
+                        Evaluation(
+                            evaluator="controller.recovery", passed=False, reasons=tuple(reasons)
+                        ),
+                    ),
+                    provenance=Provenance(
+                        parameters={
+                            "plan_id": plan.id,
+                            "recovery": "recorded terminal task results and current artifact snapshot",
+                            "tasks_without_terminal_result": sorted(
+                                task_ids - {result.task_id for result in results}
+                            ),
+                        }
+                    ),
                     status="interrupted",
                 )
                 self.store.seal(experiment)
+                self._record_candidate(goal, state, experiment)
                 state["active"] = None
                 self.store.checkpoint(goal, state)
                 history = self.store.history(goal.id)
@@ -98,13 +127,13 @@ class Controller:
         prior = Usage.model_validate(state["usage"])
         usage = prior
 
-        def save():
+        def save(event: Event | None = None):
             nonlocal usage
             usage = usage.model_copy(
                 update={"wall_seconds": prior.wall_seconds + time.monotonic() - started}
             )
             state["usage"] = usage.model_dump(mode="json")
-            self.store.checkpoint(goal, state)
+            self.store.checkpoint(goal, state, event=event)
 
         while True:
             save()
@@ -223,7 +252,7 @@ class Controller:
                             }
                         )
                         results[task.id] = result
-                        self.store.emit(
+                        save(
                             Event(
                                 kind="task.finished",
                                 goal_id=goal.id,
@@ -231,7 +260,6 @@ class Controller:
                                 payload=result.model_dump(mode="json"),
                             )
                         )
-                        save()
                         if result.status == "succeeded":
                             break
                     if interrupted:
@@ -271,11 +299,7 @@ class Controller:
                         )
                         for name, _ in evaluators
                     ]
-                artifacts = tuple(
-                    Artifact.capture(p, directory)
-                    for p in sorted(directory.rglob("*"))
-                    if p.is_file() and not p.is_symlink() and ".git" not in p.parts
-                )
+                artifacts = self.store.snapshot(experiment_id)
                 valid = bool(evaluations) and all(e.passed for e in evaluations)
                 experiment = Experiment(
                     id=experiment_id,

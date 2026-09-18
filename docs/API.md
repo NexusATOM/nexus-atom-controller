@@ -40,7 +40,7 @@ Observe/plan/execute/evaluate/learn loop with explicit failure boundaries.
 
 ### `Planner`
 
-[Source](../src/nexus_atom_controller/engine.py#L28)
+[Source](../src/nexus_atom_controller/engine.py#L27)
 
 ```python
 class Planner(ABC):
@@ -49,7 +49,7 @@ class Planner(ABC):
 
 ### `SequencePlanner`
 
-[Source](../src/nexus_atom_controller/engine.py#L36)
+[Source](../src/nexus_atom_controller/engine.py#L35)
 
 ```python
 class SequencePlanner(Planner):
@@ -59,7 +59,7 @@ class SequencePlanner(Planner):
 
 ### `Controller`
 
-[Source](../src/nexus_atom_controller/engine.py#L45)
+[Source](../src/nexus_atom_controller/engine.py#L44)
 
 ```python
 class Controller():
@@ -144,11 +144,11 @@ def serve(root: Path, host='127.0.0.1', port=8765): ...
 
 ## `nexus_atom_controller.store`
 
-Append-only experiment evidence and transactional control-plane state.
+Append-only evidence, journaled sealing and transactional control-plane state.
 
 ### `Store`
 
-[Source](../src/nexus_atom_controller/store.py#L14)
+[Source](../src/nexus_atom_controller/store.py#L16)
 
 ```python
 class Store():
@@ -157,10 +157,13 @@ class Store():
     def lock(self): ...
     def goal(self, goal: Goal) -> dict: ...
     def load_goal(self, goal_id: str) -> Goal: ...
-    def checkpoint(self, goal: Goal, state: dict): ...
+    def checkpoint(self, goal: Goal, state: dict, *, event: Event | None=None): ...
     def emit(self, event: Event): ...
     def directory(self, experiment_id: str) -> Path: ...
+    def snapshot(self, experiment_id: str) -> tuple[Artifact, ...]: ...
+    def recorded_results(self, goal_id: str, experiment_id: str) -> tuple[TaskResult, ...]: ...
     def seal(self, experiment: Experiment): ...
+    def reconcile_seals(self, goal_id: str) -> tuple[str, ...]: ...
     def history(self, goal_id: str) -> tuple[Experiment, ...]: ...
     def events(self) -> list[dict]: ...
 ```

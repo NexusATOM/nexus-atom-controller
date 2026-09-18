@@ -10,6 +10,7 @@
 | `no_more_plans` | Prepared candidates are exhausted before all goal criteria pass; inspect the ledger rather than assuming success |
 | `interrupted` | Work was active when execution stopped; inspect events and outstanding external jobs before explicit recovery |
 | Another controller owns this directory | Stop or wait for the owner; use separate state directories for independent goals |
+| Pending seal conflict | An interrupted metadata write has evidence inconsistent with its sealing journal; preserve the directory and investigate rather than overwriting it |
 | Artifact/metadata corrupted | Evidence differs from its saved hash; restore the original backup or investigate the change; do not silently rewrite the ledger |
 | Goal ID missing | Use the ID printed at creation and the same `--state` directory |
 | Slurm submission succeeds but goal fails | Inspect actual job exit state, logs, fresh data/timing output and evaluator reasons; a job ID is not evidence of completion |

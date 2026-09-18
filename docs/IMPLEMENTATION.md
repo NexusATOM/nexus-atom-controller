@@ -5,7 +5,7 @@ The source specification ended mid-section 15. This implementation completes the
 | Plan area | Implementation | Verification / boundary |
 |---|---|---|
 | 1–3 principles and protocol | Core contracts, finite metrics, DAG validation, artifacts/provenance, capability/evaluator registry | Unit tests; no vendor/model dependencies |
-| 4 autonomous control plane | Controller loop, pluggable planning, dependency scheduler, executor, checkpoints/recovery, budgets/policy, SQLite events and ledger, CLI and read-only service | Failure, timeout, replan, resume, integrity and promotion tests; sequential scheduling |
+| 4 autonomous control plane | Controller loop, pluggable planning, dependency scheduler, executor, checkpoints/recovery, budgets/policy, SQLite events and ledger, CLI and read-only service | Failure, timeout, replan, resume, integrity and promotion tests, real process-death sealing tests, interrupted-result/log retention; sequential scheduling |
 | 5 runtime abstraction | Local subprocess, OpenAI Responses, NOOA, explicit routing | Real local adapter tests, mocked hosted API contract, preserved NOOA tests; no paid/live API validation |
 | 6 HPC | Local process supervision, Slurm submit/status/wait/cancel, resource/module/container settings, accounting and saved receipts | Real local process tests; fake Slurm transport tests; Discover run pending |
 | 7 reusable science | Numeric comparisons, weighted conservation, diagnostics/suites, bias/RMSE, distributions, aligned time series, bootstrap intervals, NetCDF input, maps/profiles | Finite synthetic data and NetCDF/plot integration tests; physical interpretation and acceptance thresholds site-owned |
