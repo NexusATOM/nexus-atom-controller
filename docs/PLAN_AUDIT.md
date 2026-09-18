@@ -5,9 +5,9 @@ requirement is finished. The supplied plan ends partway through section 15.
 The repository layouts and code fragments are interpreted as architectural
 examples; the behavior and named public concepts remain the requirements.
 
-Evidence base: the six-package workspace through GEOS 8448ebc (agent migration, optional
-specialist profiles, regression comparison, and debug repair), Controller 468b981, Agents ada79d8,
-Science 7e52eec, Core deaf21a, and HPC e076bc8. The complete local suite passes 139 tests,
+Evidence base: the six-package workspace through GEOS c2924fa (agent migration, optional
+specialist profiles, regression comparison, debug repair, and proposal feedback), Controller cb4e9e4, Agents ada79d8,
+Science 7e52eec, Core deaf21a, and HPC e076bc8. The complete local suite passes 140 tests,
 with the documented optional NetCDF warning. Plot tests cover aligned 1-D/2-D
 rendering, failed-validation retention, sealing, and modified-artifact detection.
 Profile tests cover repository/objective selection, scoped source/timing evidence,
@@ -18,6 +18,8 @@ runs, wrong numerical outputs, failing baseline/candidate checks, and resume wit
 re-execution. Debug cases include a valid repair, an unreproduced or unrelated failure,
 a bad repair, a protected harness edit, a changed reference, wrong scientific output,
 and a scripted runtime retry using prior failure evidence. Public CLI run/resume were also exercised on the synthetic fixture.
+Proposal feedback tests verify that the next attempt receives the exact failed patch,
+large proposals are explicitly truncated, and hashes identify full sealed artifacts.
 Passing tests below establish only the behavior they exercise.
 
 ## Architectural principles (section 1)
@@ -65,7 +67,7 @@ Passing tests below establish only the behavior they exercise.
 | Requirement | Evidence | Assessment |
 |---|---|---|
 | GEOS federation registry (GEOSgcm, GEOSfvdycore, MAPL, others) | Preserved `geos_agents.registry`, mepo import, isolated federation tests | Generic federation mechanism implemented, not separate hard-coded registry modules per repository. |
-| build/run/profile/benchmark/validate/optimize/diagnose capabilities | `nexus_atom_geos.plugin` | Registered. diagnose currently repeats numerical/science checks; general failure diagnosis is incomplete. |
+| build/run/profile/benchmark/validate/optimize/diagnose capabilities | `nexus_atom_geos.plugin` | Registered. In debug workflows, diagnose records the reproduced failure and reference/protected-file policy for repair; otherwise it performs numerical/science checks. General causal diagnosis remains unproven. |
 | Architecture/Fortran/CUDA/build/debugging/performance/science specialists | Retained RepositoryAgent, ArchitectureAgent, CUDAAgent, ValidationAgent, PerformanceAgent, GEOSAgent | Built-in roles plus optional repository/objective ProfileSpecialistAgent reviews are implemented with explicit scoping and saved configuration. Fortran/build/debugging expertise may be configured as profiles; proven domain coverage for every named role is not established. |
 | Atmosphere/dynamics/conservation diagnostics | Generic fields and conservation; configurable GEOS suite | No domain-complete atmosphere/dynamics diagnostic library or approved GEOS science policy demonstrated. |
 | GPU-port and optimization workflows | `modernization_plan`, aliases | Shared lifecycle implemented; aliases do not prove a distinct GPU-port strategy. |
@@ -97,7 +99,7 @@ Passing tests below establish only the behavior they exercise.
 1. Evaluate the implemented debug workflow against expert-curated real failures and approved reference/acceptance policies; synthetic reproduction and repair checks are implemented.
 2. Exercise the newly implemented test/sanitizer stages with the actual model suites and instrumented commands when site tooling is available.
 3. Extend configured comparison plots with model-specific diagnostics and appropriate geographic views when domain requirements are available.
-4. Preserve prior proposal content and define deliberate continuation from accepted candidates if iterative source accumulation is required.
+4. Prior proposal content is now carried as bounded, hash-identified feedback. Implement deliberate continuation/rebasing from accepted candidates if iterative source accumulation is required; current trials use replacement proposals against original source.
 5. Extend meaningful model diagnostics and examples without claiming untested physical validity.
 
 Discover execution, model-specific acceptance criteria, live provider assessment,
