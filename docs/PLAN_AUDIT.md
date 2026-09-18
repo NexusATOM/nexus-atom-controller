@@ -5,11 +5,12 @@ requirement is finished. The supplied plan ends partway through section 15.
 The repository layouts and code fragments are interpreted as architectural
 examples; the behavior and named public concepts remain the requirements.
 
-Evidence base: Core deaf21a, Controller f78e355, Agents ed2e364, HPC e076bc8,
-Science dfd7db6, GEOS 09cfeac (including candidate profiling).
-The six-package suite before candidate profiling passed 109 tests, with the documented optional
-NetCDF warning. All eight GEOS integration tests and the updated profiler-configuration
-compatibility test passed after candidate profiling was added. Passing tests below establish only the behavior they exercise.
+Evidence base: the six-package workspace through automatic comparison plots,
+following Controller 3c4afcd and GEOS 5de1482. Core deaf21a, Agents ed2e364,
+and HPC e076bc8 are unchanged. The complete local suite passes 119 tests,
+with the documented optional NetCDF warning. Plot tests cover aligned 1-D/2-D
+rendering, failed-validation retention, sealing, and modified-artifact detection.
+Passing tests below establish only the behavior they exercise.
 
 ## Architectural principles (section 1)
 
@@ -75,7 +76,7 @@ compatibility test passed after candidate profiling was added. Passing tests bel
 |---|---|---|
 | Experiment ID, goal, parent, hypothesis, tasks, code changes, artifacts, evaluation | Core Experiment; GEOS patch/proposal artifacts; Store | Implemented with code changes as artifacts rather than a separate contract field. |
 | metadata.json; source commits/diff; build/run stdout/stderr | Sealed metadata; GEOS evidence/source-commits.json and patch files; jobs logs | Implemented with a different directory arrangement. |
-| Profile JSON, timing CSV, numerical/science metrics, plots, evaluation JSON | Profile JSON, per-phase timing CSV; automatic controller Markdown/evaluation JSON/metric CSV; field data and optional Science plots | JSON/CSV/report exports implemented and sealed for new attempts; automatic per-experiment scientific plot generation remains incomplete. |
+| Profile JSON, timing CSV, numerical/science metrics, plots, evaluation JSON | Profile JSON, per-phase timing CSV; automatic controller Markdown/evaluation JSON/metric CSV; field data and optional Science plots | JSON/CSV/report exports implemented and sealed for new attempts; selected 1-D/2-D scientific comparison plots are generated during GEOS validation and sealed with the experiment. Model-specific selection and geographic diagnostics remain site-owned. |
 | Experiment ledger as planner memory | Store history, CLI ledger, structured feedback | Implemented; demo table provides readable decisions. |
 | Isolated experiment workspaces and source preservation | GEOSWorkspace/PatchManager, clean/stale/path checks, original-source regression tests | Implemented. |
 | best_valid_candidate, latest_candidate, baseline | Controller checkpoints and promotion tests | Implemented; best pointer does not automatically merge or rebase source. |
@@ -87,7 +88,7 @@ compatibility test passed after candidate profiling was added. Passing tests bel
 
 1. Replace the regression/debug aliases with explicit workflows, diagnostics, and acceptance policies.
 2. Exercise the newly implemented test/sanitizer stages with the actual model suites and instrumented commands when site tooling is available.
-3. Add automatic diagnostic plots to the new sealed report and timing exports.
+3. Extend configured comparison plots with model-specific diagnostics and appropriate geographic views when domain requirements are available.
 4. Preserve prior proposal content and define deliberate continuation from accepted candidates if iterative source accumulation is required.
 5. Extend meaningful model diagnostics and examples without claiming untested physical validity.
 
