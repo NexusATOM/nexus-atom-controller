@@ -41,6 +41,7 @@ CLI runtime settings are persisted with the goal and restored on resume. Provide
 subject to the boundaries in [Usage](USAGE.md#agent-driven-planning-python-api).
 
 A [requirement-by-requirement audit](PLAN_AUDIT.md) identifies remaining gaps,
-including standalone regression/debug workflows, explicit test/sanitizer gates,
-and automatic report exports. Registered names or passing synthetic tests are not
+including standalone regression/debug workflows and automatic report exports.
+GEOS now supports explicitly configured test/sanitizer gates; actual site coverage
+remains to be validated. Registered names or passing synthetic tests are not
 counted as evidence that these broader requirements are complete.

@@ -79,14 +79,14 @@ compatibility test passed after candidate profiling was added. Passing tests bel
 | Experiment ledger as planner memory | Store history, CLI ledger, structured feedback | Implemented; demo table provides readable decisions. |
 | Isolated experiment workspaces and source preservation | GEOSWorkspace/PatchManager, clean/stale/path checks, original-source regression tests | Implemented. |
 | best_valid_candidate, latest_candidate, baseline | Controller checkpoints and promotion tests | Implemented; best pointer does not automatically merge or rebase source. |
-| Software compilation/tests/sanitizers | Software evaluator checks configured build/run success | Partial: site commands can invoke tests/sanitizers, but distinct mandatory test/sanitizer gates and evidence contracts are not implemented. |
+| Software compilation/tests/sanitizers | GEOS software_checks; geos.test/geos.sanitize; separate geos.tests/geos.sanitizers evaluators and software evidence requirements | Implemented as explicit configurable stages for both phases. Synthetic success/failure/omission tests pass; actual site sanitizer coverage remains unverified. Empty configuration means those checks were not required. |
 | Numerical checkpoint comparison/tolerances/reproducibility | Field comparison, bitwise/tolerance options | Partial: generic arrays supported; actual GEOS restart/checkpoint reproducibility policy and experiments absent. |
 | Scientific evaluator tree | Submitted section ends after `Science` | Earlier numerical/science/performance requirements implemented generically; no additional missing text assumed. |
 
 ## Remaining work that can proceed locally
 
 1. Replace the regression/debug aliases with explicit workflows, diagnostics, and acceptance policies.
-2. Add independently recorded software test/sanitizer stages, rather than implying build success covers them.
+2. Exercise the newly implemented test/sanitizer stages with the actual model suites and instrumented commands when site tooling is available.
 3. Export the requested experiment reports, timing CSV and diagnostic plots with verified artifact references.
 4. Preserve prior proposal content and define deliberate continuation from accepted candidates if iterative source accumulation is required.
 5. Extend meaningful model diagnostics and examples without claiming untested physical validity.
