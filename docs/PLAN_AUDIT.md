@@ -1,5 +1,7 @@
 # Audit against the submitted plan
 
+[Live completion tracker and missing-work issues](https://github.com/NexusATOM/nexus-atom-controller/issues/4).
+
 Snapshot: 2026-09-18. This is a completion audit, not a declaration that every
 requirement is finished. The supplied plan ends partway through section 15.
 The repository layouts and code fragments are interpreted as architectural

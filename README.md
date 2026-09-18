@@ -56,6 +56,8 @@ Apache-2.0. This is an independent implementation for model orchestration, not a
 
 ## Documentation
 
+- [Completion tracker and remaining GEOS work](https://github.com/NexusATOM/nexus-atom-controller/issues/4)
+
 - [Small runnable example](docs/QUICKSTART.md)
 - [All repositories and responsibilities](docs/REPOSITORIES.md)
 - [Architecture](docs/ARCHITECTURE.md)
