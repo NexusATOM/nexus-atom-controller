@@ -15,6 +15,10 @@ The source specification ended mid-section 15. This implementation completes the
 | 15 evaluators | Registered software, numerical, science and performance evaluators; all constraints required | Invalid candidate cannot be promoted; missing/invalid evidence fails closed |
 | Other model examples | ECCO state-estimation, LIS land, ISSM ice and ModelE climate toy capabilities; two-plugin example | Contract/orchestration examples only, not upstream models |
 
+## Small model-independent example
+
+`atom demo` demonstrates a measured baseline, rejection of a fast incorrect candidate, promotion of a correct candidate, durable checkpoints, and resume without re-execution. Its three source candidates are prepared, and it requires no GEOS, GPU or API key. It uses Core, Controller, HPC and Science directly. See QUICKSTART.md for the runnable walkthrough.
+
 ## Production acceptance still required
 
 1. On Discover, supply and validate actual allocation/partition/GPU settings, modules, GEOS federation, baselibs, compiler flags and input/restart datasets.

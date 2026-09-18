@@ -2,14 +2,20 @@
 
 The model-independent control plane for **Autonomous Technology for Orchestrated Modeling**. A structured goal drives observe → plan → execute → evaluate → learn/replan until deterministic criteria pass or an explicit stopping condition is reached.
 
+Start with the [small runnable example](docs/QUICKSTART.md). It needs no GEOS, GPU or API key:
+
 ```bash
-atom run --system geos --demo --state .atom/geos-demo --target speedup=1 \
-  'Optimize a synthetic kernel while preserving its output'
-atom run --system ecco --demo --state .atom/ecco-demo 'Exercise the ECCO plugin contract'
-atom run --system lis --demo --state .atom/lis-demo 'Exercise the LIS plugin contract'
-atom run --system issm --demo --state .atom/issm-demo 'Exercise the ISSM plugin contract'
-atom run --system modele --demo --state .atom/modele-demo 'Exercise the ModelE plugin contract'
+atom demo --state .atom/toy
+# Or pause after the baseline and demonstrate saved-state resume:
+atom demo --state .atom/toy-resume --pause-after 1
+atom demo --state .atom/toy-resume --resume
 ```
+
+The example measures three prepared candidates: a correct baseline, a faster but incorrect formula that gets rejected, and a correct formula that gets promoted when the 3× target passes. It saves source, logs, raw timings, evaluator decisions and an experiment ledger.
+
+**This repository is the main project entry point.** See [the repository map](docs/REPOSITORIES.md) for what Core, Controller, Agents, HPC, Science and GEOS each do and how they connect.
+
+Pydantic defines and validates structured contracts. NOOA is an optional LLM agent backend for proposing changes. ATOM orchestrates work and invokes deterministic acceptance checks. The small demo uses prepared candidates, so it does not call NOOA or any hosted model.
 
 These demonstrations use synthetic data. They do not run the upstream Earth-system models or establish GEOS GPU acceleration. For actual GEOS execution use the [Discover guide](https://github.com/NexusATOM/nexus-atom-geos/blob/main/docs/DISCOVER.md).
 
@@ -47,3 +53,17 @@ python3 -m venv .venv
 Run package tests with `python -m pytest tests` after installing the `dev` extra and sibling dependencies. The GEOS legacy tests also require the `nooa` extra; GEOS integration tests require the controller. CI tests Python 3.12 and 3.13 and builds wheel/sdist artifacts. See the [architecture and implementation map](https://github.com/NexusATOM/nexus-atom-controller/blob/main/docs/ARCHITECTURE.md).
 
 Apache-2.0. This is an independent implementation for model orchestration, not an official NASA model distribution or endorsement.
+
+## Documentation
+
+- [Small runnable example](docs/QUICKSTART.md)
+- [All repositories and responsibilities](docs/REPOSITORIES.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Add a plugin](docs/EXTENDING.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [Implementation and acceptance status](docs/IMPLEMENTATION.md)
+- [Usage and configuration](docs/USAGE.md)
+- [Python API reference](docs/API.md)
+- [Contributing](CONTRIBUTING.md)
+- [Execution boundaries](SECURITY.md)
+- [Changes](CHANGELOG.md)

@@ -19,6 +19,12 @@ def main(argv=None):
     parser.add_argument("--version", action="version", version="nexus-atom-controller 0.1.0")
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("plugins")
+    demo = commands.add_parser("demo", help="Run the small offline optimization example")
+    demo.add_argument("--state", type=Path, default=Path(".atom/toy"))
+    demo.add_argument("--resume", action="store_true")
+    demo.add_argument(
+        "--pause-after", type=int, choices=(1, 2), help="Stop at a durable experiment checkpoint"
+    )
     service = commands.add_parser("serve")
     service.add_argument("--state", type=Path, default=Path(".atom"))
     service.add_argument("--port", type=int, default=8765)
@@ -44,6 +50,13 @@ def main(argv=None):
         sub.add_argument("--state", type=Path, default=Path(".atom"))
     args = parser.parse_args(argv)
     try:
+        if args.command == "demo":
+            from .examples.toy import run_demo
+
+            report = asyncio.run(
+                run_demo(args.state, resume=args.resume, pause_after=args.pause_after)
+            )
+            return 0 if report["status"] == "succeeded" or args.pause_after else 2
         if args.command == "serve":
             from .service import serve
 
