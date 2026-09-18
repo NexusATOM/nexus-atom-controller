@@ -72,4 +72,4 @@ Agent-driven task graph planning is available through the optional
 [`RuntimePlanner` Python API](docs/USAGE.md#agent-driven-planning-python-api).
 It supplies prior evaluation feedback to NOOA or another configured runtime;
 ATOM validates the graph, executes registered capabilities and records planning
-usage. The CLI and offline demo continue to use their predefined workflows.
+usage. The CLI accepts `--planner-config` and restores that configuration on resume. Its default and the offline demo retain predefined workflows.

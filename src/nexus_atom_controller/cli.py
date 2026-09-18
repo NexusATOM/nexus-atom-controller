@@ -9,6 +9,7 @@ from nexus_atom_core import Budget, CapabilityRegistry, Goal, Plan
 
 from .discovery import PluginPlanner, discover_plugins
 from .engine import Controller, SequencePlanner
+from .planner_config import PlannerConfig, bind_planner_config
 from .store import Store
 
 
@@ -35,7 +36,13 @@ def main(argv=None):
         sub.add_argument("--config", type=Path)
         sub.add_argument("--demo", action="store_true")
         sub.add_argument("--state", type=Path, default=Path(".atom"))
-        sub.add_argument("--plans", type=Path)
+        planning = sub.add_mutually_exclusive_group()
+        planning.add_argument("--plans", type=Path)
+        planning.add_argument(
+            "--planner-config",
+            type=Path,
+            help="JSON runtime planner configuration; saved with the goal",
+        )
         sub.add_argument(
             "--budget", type=Path, help="JSON Budget; overrides individual CLI budget flags"
         )
@@ -119,6 +126,14 @@ def main(argv=None):
             )
             if goal.system != args.system:
                 raise ValueError("Resume system does not match persisted goal")
+            runtime_config = bind_planner_config(
+                store,
+                goal,
+                PlannerConfig.model_validate_json(args.planner_config.read_text())
+                if args.planner_config
+                else None,
+                explicit_plans=bool(args.plans),
+            )
             planner = (
                 SequencePlanner(
                     [Plan.model_validate(p) for p in json.loads(args.plans.read_text())]
@@ -126,6 +141,8 @@ def main(argv=None):
                 if args.plans
                 else PluginPlanner(plugin)
             )
+            if runtime_config is not None:
+                planner = runtime_config.create(store.root / "planning" / goal.id)
             controller = Controller(
                 registry,
                 planner,

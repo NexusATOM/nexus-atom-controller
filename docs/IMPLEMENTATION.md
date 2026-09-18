@@ -36,6 +36,6 @@ feeds recent experiment results/evaluations back into task-graph proposals. Plan
 and stop requests are recorded with reported usage, then checked against the DAG
 contract, capability registry and execution policy. A local subprocess test covers
 rejection, restart and revision; a real NOOA strategy is tested with a fake provider.
-This interface is currently available through Python; the CLI continues to select
-predefined plugin workflows. Provider billing and live planning quality remain
+This interface is available through Python and the CLI `--planner-config` option.
+CLI runtime settings are persisted with the goal and restored on resume. Provider billing and live planning quality remain
 subject to the boundaries in [Usage](USAGE.md#agent-driven-planning-python-api).

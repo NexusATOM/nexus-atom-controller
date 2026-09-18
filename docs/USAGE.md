@@ -64,7 +64,7 @@ Promotion updates a pointer only; it never automatically merges or pushes candid
 `RuntimePlanner` connects an Agents runtime to the controller. Install the controller's
 `agents` extra and the desired Agents provider extra (`nooa` or `openai`); local
 JSON subprocess runtimes need no provider dependency. The engine still imports
-only Core. The CLI's default remains the plugin's predefined workflow.
+only Core. The CLI's default remains the plugin's predefined workflow; select a runtime with `--planner-config` as described below.
 
 ```python
 from pathlib import Path
@@ -113,3 +113,50 @@ Tests exercise a real local JSON subprocess that revises a rejected candidate af
 restart, invalid graphs and accounting, budget exhaustion, and the real NOOA
 strategy with a fake provider. These tests do not establish live model quality,
 GEOS speedup or production science validity.
+
+## Runtime planning from the CLI
+
+`atom run` accepts `--planner-config PATH`, mutually exclusive with `--plans`.
+For a local agent, create a JSON file such as:
+
+```json
+{
+  "runtime": "local",
+  "argv": ["/absolute/path/to/python", "/absolute/path/to/agent.py"],
+  "history_limit": 5,
+  "max_output_tokens": 4096,
+  "timeout_seconds": 120,
+  "capability_guidance": {}
+}
+```
+
+The subprocess follows the Agents JSON protocol described above. Its working
+directory is the goal's planning directory, so use absolute paths for script
+arguments. No shell expansion is performed. Replace the runtime and argv with
+`"runtime": "nooa", "model": "your-provider/model"` to select NOOA, or use
+`"runtime": "openai"` with an explicit model. Provider credentials come from the
+runtime environment; do not put credentials in argv, guidance or this config,
+which is persisted in the state database and displayed by status commands.
+
+```bash
+atom run 'Evaluate a candidate using the configured scientific checks' \
+  --system geos --config /absolute/path/to/geos.json \
+  --planner-config /absolute/path/to/planner.json --state .atom/planned \
+  --target speedup=3
+atom resume GOAL_ID --system geos --config /absolute/path/to/geos.json \
+  --state .atom/planned
+```
+
+This command requires an actual model configuration and suitable capability
+parameter guidance. It does not promise that an arbitrary provider can solve
+GEOS optimization from the objective alone. The plugin's fixed evaluators retain
+acceptance authority. Use `--budget` to supply a full Budget JSON when controlling
+token, monetary or GPU usage; the accounting limitations above still apply.
+
+The validated planner configuration is saved with the goal before execution.
+Resume automatically reuses it; resupplying an identical configuration is allowed,
+but changing it or replacing it with `--plans` requires a new goal. The model's
+`--config` must still be supplied on resume. Existing goals without saved runtime
+configuration retain their previous planning behavior, and a runtime cannot be
+attached after recorded work has begun. The standalone `atom demo` remains offline
+and uses prepared candidates.

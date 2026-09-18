@@ -8,7 +8,7 @@ Model-independent CLI; plugins own configuration, workflows and criteria.
 
 ### `main`
 
-[Source](../src/nexus_atom_controller/cli.py#L15)
+[Source](../src/nexus_atom_controller/cli.py#L16)
 
 ```python
 def main(argv=None): ...
@@ -144,6 +144,37 @@ class ToyPlanner(Planner):
 
 ```python
 async def run_demo(root: Path, *, resume=False, pause_after: int | None=None): ...
+```
+
+## `nexus_atom_controller.planner_config`
+
+Validated, credential-free CLI configuration for optional proposal runtimes.
+
+### `PlannerConfig`
+
+[Source](../src/nexus_atom_controller/planner_config.py#L12)
+
+```python
+class PlannerConfig(Contract):
+    runtime: Literal['local', 'nooa', 'openai']
+    model: str | None = None
+    argv: tuple[str, ...] = ()
+    capability_guidance: dict = Field(default_factory=dict)
+    history_limit: int = Field(default=5, gt=0)
+    max_output_tokens: int = Field(default=4096, gt=0)
+    timeout_seconds: float = Field(default=120, gt=0, allow_inf_nan=False)
+    def valid_backend(self): ...
+    def create(self, directory: Path) -> RuntimePlanner: ...
+```
+
+### `bind_planner_config`
+
+[Source](../src/nexus_atom_controller/planner_config.py#L58)
+
+Persist the runtime choice and reuse it on resume; never silently replace it.
+
+```python
+def bind_planner_config(store, goal, supplied: PlannerConfig | None, *, explicit_plans=False): ...
 ```
 
 ## `nexus_atom_controller.planning`
