@@ -256,7 +256,13 @@ async def test_recovery_retains_results_budget_and_partial_logs(tmp_path, change
     assert experiment.results[0].task_id == "completed"
     assert experiment.status == "interrupted"
     assert not experiment.evaluations[0].passed
-    assert {a.path for a in experiment.artifacts} == {"completed.txt", "partial.log"}
+    assert {a.path for a in experiment.artifacts} == {
+        "completed.txt",
+        "partial.log",
+        "_atom_report/summary.md",
+        "_atom_report/evaluation.json",
+        "_atom_report/metrics.csv",
+    }
     assert experiment.provenance.parameters["tasks_without_terminal_result"] == ["waiting"]
     assert (
         any("changed or is missing" in reason for reason in experiment.evaluations[0].reasons)

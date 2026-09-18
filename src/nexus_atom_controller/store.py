@@ -107,6 +107,7 @@ class Store:
             and ".git" not in path.relative_to(directory).parts
             and path != directory / "metadata.json"
             and not (path.parent == directory and path.name.startswith(".atom-seal-"))
+            and not (path.parent == directory / "_atom_report" and path.name.startswith(".report-"))
         )
 
     def recorded_results(self, goal_id: str, experiment_id: str) -> tuple[TaskResult, ...]:

@@ -80,6 +80,14 @@ async def test_replan_reject_promote_resume_and_tamper(tmp_path):
     assert state["status"] == "succeeded"
     history = store.history(goal.id)
     assert [e.status for e in history] == ["rejected", "valid", "valid"]
+    import json
+
+    reports = [
+        json.loads((store.directory(e.id) / "_atom_report/evaluation.json").read_text())
+        for e in history
+    ]
+    assert [report["goal_satisfied"] for report in reports] == [False, False, True]
+    assert all(any(a.path == "_atom_report/metrics.csv" for a in e.artifacts) for e in history)
     assert state["best_valid_candidate"] == history[-1].id
     assert (await controller.run(goal))["status"] == "succeeded"
     assert plugin.action.calls == 3

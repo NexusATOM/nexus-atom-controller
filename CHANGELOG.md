@@ -10,3 +10,9 @@
 ## 0.1.0
 
 Initial multi-repository Nexus ATOM implementation. See README for implemented contracts, verification and production integration boundaries.
+
+## Unreleased experiment reports
+
+- Automatically generate Markdown summaries, evaluation JSON, and metric CSV for
+  new attempts and interrupted recovery, then include them in the sealed manifest.
+- Preserve existing sealed experiments without rewriting reports on resume.

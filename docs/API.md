@@ -40,7 +40,7 @@ Observe/plan/execute/evaluate/learn loop with explicit failure boundaries.
 
 ### `PlanningResult`
 
-[Source](../src/nexus_atom_controller/engine.py#L28)
+[Source](../src/nexus_atom_controller/engine.py#L29)
 
 Untrusted proposal plus runtime accounting, recorded before Plan validation.
 
@@ -55,7 +55,7 @@ class PlanningResult(Contract):
 
 ### `Planner`
 
-[Source](../src/nexus_atom_controller/engine.py#L38)
+[Source](../src/nexus_atom_controller/engine.py#L39)
 
 ```python
 class Planner(ABC):
@@ -65,7 +65,7 @@ class Planner(ABC):
 
 ### `SequencePlanner`
 
-[Source](../src/nexus_atom_controller/engine.py#L50)
+[Source](../src/nexus_atom_controller/engine.py#L51)
 
 ```python
 class SequencePlanner(Planner):
@@ -75,7 +75,7 @@ class SequencePlanner(Planner):
 
 ### `Controller`
 
-[Source](../src/nexus_atom_controller/engine.py#L59)
+[Source](../src/nexus_atom_controller/engine.py#L60)
 
 ```python
 class Controller():
@@ -195,6 +195,23 @@ class RuntimePlanner(Planner):
     def __init__(self, runtime, directory: Path, *, capability_guidance: dict | None=None, history_limit: int=5, max_output_tokens: int=4096, timeout_seconds: float=120): ...
     async def plan(self, goal, history, registry): ...
     async def plan_with_budget(self, goal, history, registry, remaining): ...
+```
+
+## `nexus_atom_controller.reports`
+
+Deterministic reports generated before sealing; never an alternative verdict.
+
+### `write_experiment_report`
+
+[Source](../src/nexus_atom_controller/reports.py#L17)
+
+Write reserved report files for an unsealed experiment.
+
+The engine includes these files in the artifact snapshot before seal journaling.
+Recovery may regenerate them only while an experiment is still unsealed.
+
+```python
+def write_experiment_report(goal: Goal, experiment: Experiment, directory: Path) -> None: ...
 ```
 
 ## `nexus_atom_controller.service`

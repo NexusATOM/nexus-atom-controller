@@ -22,6 +22,7 @@ from nexus_atom_core import (
     uid,
 )
 
+from .reports import write_experiment_report
 from .store import Store
 
 
@@ -131,7 +132,7 @@ class Controller:
                     ),
                     status="interrupted",
                 )
-                self.store.seal(experiment)
+                experiment = self._seal(goal, experiment)
                 self._record_candidate(goal, state, experiment)
                 state["active"] = None
                 self.store.checkpoint(goal, state)
@@ -358,7 +359,7 @@ class Controller:
                     provenance=Provenance(parameters={"plan_id": plan.id}),
                     status="interrupted" if interrupted else ("valid" if valid else "rejected"),
                 )
-                self.store.seal(experiment)
+                experiment = self._seal(goal, experiment)
                 self._record_candidate(goal, state, experiment)
                 state["active"] = None
                 save()
@@ -380,6 +381,12 @@ class Controller:
                 state["status"] = "interrupted"
                 save()
                 raise
+
+    def _seal(self, goal: Goal, experiment: Experiment) -> Experiment:
+        write_experiment_report(goal, experiment, self.store.directory(experiment.id))
+        experiment = experiment.model_copy(update={"artifacts": self.store.snapshot(experiment.id)})
+        self.store.seal(experiment)
+        return experiment
 
     def _record_candidate(self, goal: Goal, state: dict, experiment: Experiment):
         state["latest_candidate"] = experiment.id

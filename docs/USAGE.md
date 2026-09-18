@@ -160,3 +160,26 @@ but changing it or replacing it with `--plans` requires a new goal. The model's
 configuration retain their previous planning behavior, and a runtime cannot be
 attached after recorded work has begun. The standalone `atom demo` remains offline
 and uses prepared candidates.
+
+## Automatic experiment reports
+
+New controller experiments include a reserved `_atom_report/` directory:
+
+- `summary.md`: hypothesis, recorded status, whether the goal was satisfied,
+  evaluator decisions/reasons, task outcomes and unfinished tasks.
+- `evaluation.json`: schema version, fixed goal/targets, experiment identity,
+  recorded status and evaluator results.
+- `metrics.csv`: one row per evaluator metric, with its decision, measured value
+  and declared minimum target when present. Different metric units are not summed.
+
+Reports are generated before sealing and included in the same artifact-hash
+manifest as the measured evidence. They also accompany explicit recovery of
+interrupted attempts. Journal recovery reuses the already sealed report without
+rerunning work. Editing a report after sealing fails history verification.
+Existing sealed experiments remain unchanged and are not backfilled on resume.
+
+`_atom_report` is reserved for the controller: plugins must not place task artifacts
+there. Reports may be regenerated while an experiment is unsealed, but never after
+metadata publication. They summarize configured evaluator decisions; a passing
+report does not establish untested scientific validity. This export currently
+provides JSON/CSV/Markdown, not a general plotting or interactive dashboard layer.

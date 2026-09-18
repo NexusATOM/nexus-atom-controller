@@ -75,7 +75,7 @@ compatibility test passed after candidate profiling was added. Passing tests bel
 |---|---|---|
 | Experiment ID, goal, parent, hypothesis, tasks, code changes, artifacts, evaluation | Core Experiment; GEOS patch/proposal artifacts; Store | Implemented with code changes as artifacts rather than a separate contract field. |
 | metadata.json; source commits/diff; build/run stdout/stderr | Sealed metadata; GEOS evidence/source-commits.json and patch files; jobs logs | Implemented with a different directory arrangement. |
-| Profile JSON, timing CSV, numerical/science metrics, plots, evaluation JSON | Profile/timing JSON, field data and evaluations in metadata; optional Science plots | Partial: canonical CSV and per-experiment plot/report exports are not automatically produced by the modernization workflow. |
+| Profile JSON, timing CSV, numerical/science metrics, plots, evaluation JSON | Profile JSON, per-phase timing CSV; automatic controller Markdown/evaluation JSON/metric CSV; field data and optional Science plots | JSON/CSV/report exports implemented and sealed for new attempts; automatic per-experiment scientific plot generation remains incomplete. |
 | Experiment ledger as planner memory | Store history, CLI ledger, structured feedback | Implemented; demo table provides readable decisions. |
 | Isolated experiment workspaces and source preservation | GEOSWorkspace/PatchManager, clean/stale/path checks, original-source regression tests | Implemented. |
 | best_valid_candidate, latest_candidate, baseline | Controller checkpoints and promotion tests | Implemented; best pointer does not automatically merge or rebase source. |
@@ -87,7 +87,7 @@ compatibility test passed after candidate profiling was added. Passing tests bel
 
 1. Replace the regression/debug aliases with explicit workflows, diagnostics, and acceptance policies.
 2. Exercise the newly implemented test/sanitizer stages with the actual model suites and instrumented commands when site tooling is available.
-3. Export the requested experiment reports, timing CSV and diagnostic plots with verified artifact references.
+3. Add automatic diagnostic plots to the new sealed report and timing exports.
 4. Preserve prior proposal content and define deliberate continuation from accepted candidates if iterative source accumulation is required.
 5. Extend meaningful model diagnostics and examples without claiming untested physical validity.
 
