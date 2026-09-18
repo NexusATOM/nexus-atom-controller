@@ -60,7 +60,7 @@ Passing tests below establish only the behavior they exercise.
 | CLI and service | `cli.py`, `service.py` | CLI run/resume/status/ledger/events/demo and read-only loopback service implemented. |
 | AgentRuntime.execute and routing | Agents `runtime.py`; Controller `planner_config.py` | NOOA/OpenAI/local and explicit router present. Credentials supplied externally. |
 | allocate, submit, status, wait, cancel, run | HPC `scheduler.py`, `slurm.py` | Implemented. allocate submits a payload-bearing job, not a detached interactive allocation. |
-| stdout, stderr, resources, usage | HPC scheduler/backend methods | Implemented. Local resources is synchronous, Slurm resources asynchronous; interface harmonization remains useful. |
+| stdout, stderr, resources, usage | HPC scheduler/backend methods | Implemented. Both backends expose async resources() returning typed ResourceInventory/ResourcePool data; unknown fields, empty output and discovery failures remain distinct. Site resource availability is not inferred. |
 | Discover, environments, modules, containers, monitoring, accounting | HPC backends/configuration; GEOS DISCOVER.md | Configurable infrastructure and template delivered. Allocation/module/GPU settings and real scheduler behavior unverified. |
 | ScientificMetric, ScientificDiagnostic, ScientificComparison, ValidationSuite | Science `fields.py` | Implemented with explicit finite data and policy. |
 | PlotArtifact, DatasetArtifact, UncertaintyEstimate | Science `io.py`, `fields.py`, `statistics.py` | Implemented; uncertainty utility is seeded IID bootstrap, not a general climate uncertainty model. |
