@@ -11,3 +11,6 @@
 - [Contributing](../CONTRIBUTING.md)
 - [Execution boundaries](../SECURITY.md)
 - [Changes](../CHANGELOG.md)
+
+- [Plan completion audit](PLAN_AUDIT.md): requirement-by-requirement evidence,
+  partial implementations, deferred production checks, and remaining local work.

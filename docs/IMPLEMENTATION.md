@@ -39,3 +39,8 @@ rejection, restart and revision; a real NOOA strategy is tested with a fake prov
 This interface is available through Python and the CLI `--planner-config` option.
 CLI runtime settings are persisted with the goal and restored on resume. Provider billing and live planning quality remain
 subject to the boundaries in [Usage](USAGE.md#agent-driven-planning-python-api).
+
+A [requirement-by-requirement audit](PLAN_AUDIT.md) identifies remaining gaps,
+including standalone regression/debug workflows, explicit test/sanitizer gates,
+and automatic report exports. Registered names or passing synthetic tests are not
+counted as evidence that these broader requirements are complete.
