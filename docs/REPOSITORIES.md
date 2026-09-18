@@ -23,6 +23,7 @@ second copy of the specialist roles. Install GEOS with `[nooa]` for specialist
 reasoning. Do not co-install the old `nexus-geos-agent` distribution, which uses
 the same import/CLI names. Agent sessions and Controller experiments have separate
 persistent-state formats.
+Optional [repository and science-objective specialists](https://github.com/NexusATOM/nexus-atom-geos/blob/main/docs/SPECIALISTS.md) add scoped advisory reviews to GEOS Agent workflows. That guide also lists the task, reference-data, and acceptance-policy inputs needed to evaluate their usefulness.
 
 ## How they connect
 

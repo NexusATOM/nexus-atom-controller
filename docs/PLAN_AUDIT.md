@@ -5,12 +5,15 @@ requirement is finished. The supplied plan ends partway through section 15.
 The repository layouts and code fragments are interpreted as architectural
 examples; the behavior and named public concepts remain the requirements.
 
-Evidence base: the six-package workspace through automatic comparison plots,
-following Controller 3c4afcd and GEOS 5de1482. Core deaf21a, Agents ed2e364,
-and HPC e076bc8 are unchanged. The complete local suite passes 119 tests,
+Evidence base: the six-package workspace through GEOS ccd33a1 (complete agent
+migration and optional specialist profiles), Controller fb44462, Agents ada79d8,
+Science 7e52eec, Core deaf21a, and HPC e076bc8. The complete local suite passes 124 tests,
 with the documented optional NetCDF warning. Plot tests cover aligned 1-D/2-D
 rendering, failed-validation retention, sealing, and modified-artifact detection.
-Passing tests below establish only the behavior they exercise.
+Profile tests cover repository/objective selection, scoped source/timing evidence,
+citation rejection, and persisted configuration across session resume. The migrated
+agent source history and five namespaced release tags are verified independently
+of the old repository. Passing tests below establish only the behavior they exercise.
 
 ## Architectural principles (section 1)
 
@@ -58,7 +61,7 @@ Passing tests below establish only the behavior they exercise.
 |---|---|---|
 | GEOS federation registry (GEOSgcm, GEOSfvdycore, MAPL, others) | Preserved `geos_agents.registry`, mepo import, isolated federation tests | Generic federation mechanism implemented, not separate hard-coded registry modules per repository. |
 | build/run/profile/benchmark/validate/optimize/diagnose capabilities | `nexus_atom_geos.plugin` | Registered. diagnose currently repeats numerical/science checks; general failure diagnosis is incomplete. |
-| Architecture/Fortran/CUDA/build/debugging/performance/science specialists | Retained RepositoryAgent, ArchitectureAgent, CUDAAgent, ValidationAgent, PerformanceAgent, GEOSAgent | Fortran/build/debugging knowledge is partly carried by generic specialists. Dedicated specialists and proven coverage for every named role are not established. |
+| Architecture/Fortran/CUDA/build/debugging/performance/science specialists | Retained RepositoryAgent, ArchitectureAgent, CUDAAgent, ValidationAgent, PerformanceAgent, GEOSAgent | Built-in roles plus optional repository/objective ProfileSpecialistAgent reviews are implemented with explicit scoping and saved configuration. Fortran/build/debugging expertise may be configured as profiles; proven domain coverage for every named role is not established. |
 | Atmosphere/dynamics/conservation diagnostics | Generic fields and conservation; configurable GEOS suite | No domain-complete atmosphere/dynamics diagnostic library or approved GEOS science policy demonstrated. |
 | GPU-port and optimization workflows | `modernization_plan`, aliases | Shared lifecycle implemented; aliases do not prove a distinct GPU-port strategy. |
 | Regression and debug workflows | `regression_plan`, `debug_plan` | Incomplete: baseline build/run skeleton; debug is an alias, not a diagnostic/repair workflow with appropriate acceptance criteria. |
