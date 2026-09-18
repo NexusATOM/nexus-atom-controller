@@ -11,6 +11,17 @@
 | [Science](https://github.com/NexusATOM/nexus-atom-science) | `nexus_atom_science` | Reusable diagnostics, numerical comparison, weighted conservation, statistics, datasets and plots | Core |
 | [GEOS](https://github.com/NexusATOM/nexus-atom-geos) | `nexus_atom_geos`, retained `geos_agents` | GEOS federation/worktrees, configured build/run/profile/optimization workflows, evaluators and legacy tools | Core, Agents, HPC, Science |
 
+## Using the GEOS specialists
+
+The separate [standalone GEOS Agent](https://github.com/nasa-nccs-hpda/nexus-geos-agent)
+contains the original NOOA specialists, engineering tools, and durable sessions.
+Its [agent usage guide](https://github.com/nasa-nccs-hpda/nexus-geos-agent/blob/main/docs/AGENTS.md)
+explains the six roles, orchestration, tool integration, and runnable examples.
+ATOM's Agents package supplies interchangeable proposal backends rather than a
+second copy of those specialist roles. Use separate environments for standalone
+GEOS Agent and the ATOM GEOS distribution because both provide `geos_agents` and
+`geos-agent`. Their persistent-state formats are separate.
+
 ## How they connect
 
 ```mermaid
