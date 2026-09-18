@@ -26,6 +26,15 @@ Continuation tests verify resume, accepted-parent reconstruction after rejection
 fixed original baseline measurements, cumulative file changes, corruption rejection,
 and rejection of changed original commits. Timings in that test are scripted inputs,
 not measured GEOS performance.
+Latest working checkpoint: the workspace suite passes 162 tests. Optional GEOS
+specialists now run as separate ATOM review tasks before modernization/debug
+proposals, with repository/objective scoping, runtime routing, citation checks,
+source-change guards and persisted assessments. Eight focused checks also pass
+after adding verified history to execution contexts and rejecting configuration
+drift on further GEOS attempts. The scripted CLI example and completed-goal resume
+passed; live-provider reasoning and production GEOS remain unqualified. Development
+is paused at the user's request; remaining work is recorded in the issue tracker.
+
 Passing tests below establish only the behavior they exercise.
 
 ## Architectural principles (section 1)

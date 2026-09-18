@@ -251,6 +251,7 @@ class Controller:
                             parent_experiment=next(
                                 (e for e in history if e.id == state["best_valid_candidate"]), None
                             ),
+                            history=history,
                             previous_results=results,
                             remaining=self.budget.model_copy(
                                 update={
