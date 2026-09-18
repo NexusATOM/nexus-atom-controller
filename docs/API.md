@@ -38,18 +38,34 @@ class PluginPlanner(Planner):
 
 Observe/plan/execute/evaluate/learn loop with explicit failure boundaries.
 
+### `PlanningResult`
+
+[Source](../src/nexus_atom_controller/engine.py#L28)
+
+Untrusted proposal plus runtime accounting, recorded before Plan validation.
+
+```python
+class PlanningResult(Contract):
+    proposal: dict | None
+    rationale: str
+    runtime: str
+    usage: Usage = Usage()
+    evidence: dict = {}
+```
+
 ### `Planner`
 
-[Source](../src/nexus_atom_controller/engine.py#L27)
+[Source](../src/nexus_atom_controller/engine.py#L38)
 
 ```python
 class Planner(ABC):
-    async def plan(self, goal: Goal, history: tuple[Experiment, ...], registry: CapabilityRegistry) -> Plan | None: ...
+    async def plan(self, goal: Goal, history: tuple[Experiment, ...], registry: CapabilityRegistry) -> Plan | PlanningResult | None: ...
+    async def plan_with_budget(self, goal, history, registry, remaining: Budget): ...
 ```
 
 ### `SequencePlanner`
 
-[Source](../src/nexus_atom_controller/engine.py#L35)
+[Source](../src/nexus_atom_controller/engine.py#L50)
 
 ```python
 class SequencePlanner(Planner):
@@ -59,7 +75,7 @@ class SequencePlanner(Planner):
 
 ### `Controller`
 
-[Source](../src/nexus_atom_controller/engine.py#L44)
+[Source](../src/nexus_atom_controller/engine.py#L59)
 
 ```python
 class Controller():
@@ -128,6 +144,26 @@ class ToyPlanner(Planner):
 
 ```python
 async def run_demo(root: Path, *, resume=False, pause_after: int | None=None): ...
+```
+
+## `nexus_atom_controller.planning`
+
+Optional runtime-backed goal decomposition without provider imports in the engine.
+
+### `RuntimePlanner`
+
+[Source](../src/nexus_atom_controller/planning.py#L10)
+
+Ask an AgentRuntime for a Plan; the controller validates and executes it.
+
+capability_guidance supplies plugin-specific parameter conventions. History is
+bounded by experiment count; source files and artifact contents are not read.
+
+```python
+class RuntimePlanner(Planner):
+    def __init__(self, runtime, directory: Path, *, capability_guidance: dict | None=None, history_limit: int=5, max_output_tokens: int=4096, timeout_seconds: float=120): ...
+    async def plan(self, goal, history, registry): ...
+    async def plan_with_budget(self, goal, history, registry, remaining): ...
 ```
 
 ## `nexus_atom_controller.service`

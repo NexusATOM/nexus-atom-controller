@@ -58,3 +58,58 @@ Promotion updates a pointer only; it never automatically merges or pushes candid
 ## Read-only service
 
 `GET /health` reports service availability. `GET /goals/ID` returns a saved checkpoint. `GET /goals/ID/experiments` verifies and returns its ledger. The server accepts no execution/mutation endpoints and binds only to loopback. Use the CLI for authorized execution. The service is a local inspection facility, not a hardened multi-user deployment.
+
+## Agent-driven planning (Python API)
+
+`RuntimePlanner` connects an Agents runtime to the controller. Install the controller's
+`agents` extra and the desired Agents provider extra (`nooa` or `openai`); local
+JSON subprocess runtimes need no provider dependency. The engine still imports
+only Core. The CLI's default remains the plugin's predefined workflow.
+
+```python
+from pathlib import Path
+from nexus_atom_agents import NOOARuntime
+from nexus_atom_controller import Controller, RuntimePlanner, Store
+
+# registry and goal are configured exactly as for a deterministic planner.
+store = Store(Path(".atom/agent-goal"))
+planner = RuntimePlanner(
+    NOOARuntime("your-explicit-provider/model"),
+    store.root / "planning",
+    capability_guidance={
+        "your_system.run": {"parameters": "Describe the plugin's accepted parameters here"}
+    },
+)
+controller = Controller(registry, planner, store)
+# In an async application: state = await controller.run(goal)
+# Close store when the application is finished.
+```
+
+The request includes the immutable goal, remaining budget, Plan JSON schema,
+registered capabilities, parameter guidance, and the last five experiments
+(configurable). History includes task outputs and deterministic evaluations;
+artifact files and source contents are not automatically read. Use guidance that
+matches your plugin: capability descriptions alone do not define parameter schemas.
+Provider-backed runs require credentials and may incur charges.
+
+The runtime returns an `AgentResult` whose `proposal` is a Plan object, or exactly
+`{"stop": true}`. A stop produces `no_more_plans`, never success. ATOM records the
+request context, proposal, rationale, runtime and reported usage in a
+`planning.finished` event before validating the Plan. Cyclic graphs, unknown
+capabilities and policy-forbidden tasks cannot execute. Registered evaluators
+still decide acceptance; the agent cannot change the goal's constraints or targets.
+
+Reported planning tokens, cost and GPU time count toward the goal budget. Output
+tokens and planning wall time are bounded. Input tokens can exceed the remaining
+token allowance during one provider call; this is not a prepaid spending limit.
+OpenAI reports token usage but does not calculate monetary cost here; NOOA usage
+is currently supplied through the proposal response, and LocalRuntime does not
+infer token or monetary usage. Configure provider-side spending limits where needed.
+A crash during a provider call can leave its usage unrecorded and resume may make
+another planning call. Exactly-once provider billing is not guaranteed. Completed
+experiments and evaluation feedback persist and are supplied to replanning on resume.
+
+Tests exercise a real local JSON subprocess that revises a rejected candidate after
+restart, invalid graphs and accounting, budget exhaustion, and the real NOOA
+strategy with a fake provider. These tests do not establish live model quality,
+GEOS speedup or production science validity.

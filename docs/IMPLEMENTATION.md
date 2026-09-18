@@ -28,3 +28,14 @@ The source specification ended mid-section 15. This implementation completes the
 5. Exercise configured hosted/local model providers with authorized credentials and provider-side limits if autonomous proposals are desired.
 
 No synthetic result satisfies these production checks. This is an implemented and locally tested framework release, not a claim that GEOS has already achieved 3x GPU speedup or scientific certification. Full arbitrary natural-language scientific experiment design, production Phase II adapters, data/observations/assimilation services and UI remain extension work; the supplied plan defers those repositories.
+
+## Post-release agent planning on main
+
+`RuntimePlanner` now connects the controller to a configured Agents runtime and
+feeds recent experiment results/evaluations back into task-graph proposals. Plans
+and stop requests are recorded with reported usage, then checked against the DAG
+contract, capability registry and execution policy. A local subprocess test covers
+rejection, restart and revision; a real NOOA strategy is tested with a fake provider.
+This interface is currently available through Python; the CLI continues to select
+predefined plugin workflows. Provider billing and live planning quality remain
+subject to the boundaries in [Usage](USAGE.md#agent-driven-planning-python-api).

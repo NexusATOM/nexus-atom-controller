@@ -9,6 +9,7 @@ from abc import ABC, abstractmethod
 from nexus_atom_core import (
     Budget,
     CapabilityRegistry,
+    Contract,
     Evaluation,
     Event,
     ExecutionContext,
@@ -24,12 +25,26 @@ from nexus_atom_core import (
 from .store import Store
 
 
+class PlanningResult(Contract):
+    """Untrusted proposal plus runtime accounting, recorded before Plan validation."""
+
+    proposal: dict | None
+    rationale: str
+    runtime: str
+    usage: Usage = Usage()
+    evidence: dict = {}
+
+
 class Planner(ABC):
     @abstractmethod
     async def plan(
         self, goal: Goal, history: tuple[Experiment, ...], registry: CapabilityRegistry
-    ) -> Plan | None:
+    ) -> Plan | PlanningResult | None:
         """None means no remaining hypothesis, never success."""
+
+    async def plan_with_budget(self, goal, history, registry, remaining: Budget):
+        """Existing deterministic planners retain their original interface."""
+        return await self.plan(goal, history, registry)
 
 
 class SequencePlanner(Planner):
@@ -142,14 +157,44 @@ class Controller:
                 save()
                 return state
             try:
+                remaining = self.budget.model_copy(
+                    update={
+                        "max_tokens": max(0, self.budget.max_tokens - usage.tokens),
+                        "max_cost": max(0, self.budget.max_cost - usage.cost),
+                        "max_tasks": max(0, self.budget.max_tasks - usage.tasks),
+                        "max_experiments": max(0, self.budget.max_experiments - usage.experiments),
+                        "max_gpu_seconds": max(0, self.budget.max_gpu_seconds - usage.gpu_seconds),
+                        "wall_seconds": max(0, self.budget.wall_seconds - usage.wall_seconds),
+                    }
+                )
                 plan = await asyncio.wait_for(
-                    self.planner.plan(goal, history, self.registry),
+                    self.planner.plan_with_budget(goal, history, self.registry, remaining),
                     max(0.001, self.budget.wall_seconds - usage.wall_seconds),
                 )
             except TimeoutError:
                 state["status"] = "budget_exhausted"
                 save()
                 return state
+            if isinstance(plan, PlanningResult):
+                usage = usage.model_copy(
+                    update={
+                        "tokens": usage.tokens + plan.usage.tokens,
+                        "cost": usage.cost + plan.usage.cost,
+                        "gpu_seconds": usage.gpu_seconds + plan.usage.gpu_seconds,
+                    }
+                )
+                save(
+                    Event(
+                        kind="planning.finished",
+                        goal_id=goal.id,
+                        payload=plan.model_dump(mode="json"),
+                    )
+                )
+                if self.budget.exhausted(usage):
+                    state["status"] = "budget_exhausted"
+                    save()
+                    return state
+                plan = Plan.model_validate(plan.proposal) if plan.proposal is not None else None
             if plan is None:
                 state["status"] = "no_more_plans"
                 save()

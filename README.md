@@ -67,3 +67,9 @@ Apache-2.0. This is an independent implementation for model orchestration, not a
 - [Contributing](CONTRIBUTING.md)
 - [Execution boundaries](SECURITY.md)
 - [Changes](CHANGELOG.md)
+
+Agent-driven task graph planning is available through the optional
+[`RuntimePlanner` Python API](docs/USAGE.md#agent-driven-planning-python-api).
+It supplies prior evaluation feedback to NOOA or another configured runtime;
+ATOM validates the graph, executes registered capabilities and records planning
+usage. The CLI and offline demo continue to use their predefined workflows.
