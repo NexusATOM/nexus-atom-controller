@@ -5,9 +5,9 @@ requirement is finished. The supplied plan ends partway through section 15.
 The repository layouts and code fragments are interpreted as architectural
 examples; the behavior and named public concepts remain the requirements.
 
-Evidence base: the six-package workspace through GEOS fc68fb8 (agent migration, optional
-specialist profiles, and regression comparison), Controller 2235557, Agents ada79d8,
-Science 7e52eec, Core deaf21a, and HPC e076bc8. The complete local suite passes 130 tests,
+Evidence base: the six-package workspace through GEOS 8448ebc (agent migration, optional
+specialist profiles, regression comparison, and debug repair), Controller 468b981, Agents ada79d8,
+Science 7e52eec, Core deaf21a, and HPC e076bc8. The complete local suite passes 139 tests,
 with the documented optional NetCDF warning. Plot tests cover aligned 1-D/2-D
 rendering, failed-validation retention, sealing, and modified-artifact detection.
 Profile tests cover repository/objective selection, scoped source/timing evidence,
@@ -15,7 +15,9 @@ citation rejection, and persisted configuration across session resume. The migra
 agent source history and five namespaced release tags are verified independently
 of the old repository. Regression cases cover valid prepared patches, repeated-source
 runs, wrong numerical outputs, failing baseline/candidate checks, and resume without
-re-execution. Public CLI run/resume were also exercised on the synthetic fixture.
+re-execution. Debug cases include a valid repair, an unreproduced or unrelated failure,
+a bad repair, a protected harness edit, a changed reference, wrong scientific output,
+and a scripted runtime retry using prior failure evidence. Public CLI run/resume were also exercised on the synthetic fixture.
 Passing tests below establish only the behavior they exercise.
 
 ## Architectural principles (section 1)
@@ -67,7 +69,7 @@ Passing tests below establish only the behavior they exercise.
 | Architecture/Fortran/CUDA/build/debugging/performance/science specialists | Retained RepositoryAgent, ArchitectureAgent, CUDAAgent, ValidationAgent, PerformanceAgent, GEOSAgent | Built-in roles plus optional repository/objective ProfileSpecialistAgent reviews are implemented with explicit scoping and saved configuration. Fortran/build/debugging expertise may be configured as profiles; proven domain coverage for every named role is not established. |
 | Atmosphere/dynamics/conservation diagnostics | Generic fields and conservation; configurable GEOS suite | No domain-complete atmosphere/dynamics diagnostic library or approved GEOS science policy demonstrated. |
 | GPU-port and optimization workflows | `modernization_plan`, aliases | Shared lifecycle implemented; aliases do not prove a distinct GPU-port strategy. |
-| Regression and debug workflows | `regression_plan`, `debug_plan` | Regression now compares baseline/candidate build, required software checks, numerical and science outputs using a prepared patch or unchanged-source repeated run. Debug remains incomplete and explicitly raises rather than impersonating a regression run. |
+| Regression and debug workflows | `regression_plan`, `debug_plan` | Regression now compares baseline/candidate build, required software checks, numerical and science outputs using a prepared patch or unchanged-source repeated run. Debug now requires a specified failure, records diagnostics, applies a prepared/runtime repair, and verifies the same reproducer plus a hash-verified reference. Real GEOS debugging remains unverified. |
 | Inspect, baseline build/run/benchmark/profile | Synthetic modernization test and recorded artifacts | Implemented. |
 | Identify bottlenecks and generate/select hypotheses | Runtime receives source, timings, profiler excerpts and history | Evidence delivery implemented; model interpretation/selection quality unverified. No universal profiler parser. |
 | Modify, build, run; debug after failure | Checked patches; task-failure feedback; synthetic compile-fail/repair integration test | Candidate repair loop demonstrated with scripted local proposals; live scientific debugging unverified. |
@@ -92,7 +94,7 @@ Passing tests below establish only the behavior they exercise.
 
 ## Remaining work that can proceed locally
 
-1. Implement an explicit debug workflow with failure reproduction, diagnostics, repair, and appropriate acceptance policies; regression comparison is now implemented.
+1. Evaluate the implemented debug workflow against expert-curated real failures and approved reference/acceptance policies; synthetic reproduction and repair checks are implemented.
 2. Exercise the newly implemented test/sanitizer stages with the actual model suites and instrumented commands when site tooling is available.
 3. Extend configured comparison plots with model-specific diagnostics and appropriate geographic views when domain requirements are available.
 4. Preserve prior proposal content and define deliberate continuation from accepted candidates if iterative source accumulation is required.
