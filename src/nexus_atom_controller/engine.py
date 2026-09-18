@@ -248,6 +248,9 @@ class Controller:
                             goal=goal,
                             experiment_id=experiment_id,
                             directory=directory,
+                            parent_experiment=next(
+                                (e for e in history if e.id == state["best_valid_candidate"]), None
+                            ),
                             previous_results=results,
                             remaining=self.budget.model_copy(
                                 update={

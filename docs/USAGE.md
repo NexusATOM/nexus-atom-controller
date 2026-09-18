@@ -183,3 +183,11 @@ there. Reports may be regenerated while an experiment is unsealed, but never aft
 metadata publication. They summarize configured evaluator decisions; a passing
 report does not establish untested scientific validity. This export currently
 provides JSON/CSV/Markdown, not a general plotting or interactive dashboard layer.
+
+
+Capabilities receive the controller-selected best accepted experiment in
+`ExecutionContext.parent_experiment`. This follows the same promotion policy as
+the checkpoint's `best_valid_candidate` and survives resume through verified
+ledger history. Plugins may opt into source continuation; the Controller itself
+does not alter source trees. GEOS documents `continuation: best_valid` and keeps
+its original scientific/performance reference while reconstructing candidates.

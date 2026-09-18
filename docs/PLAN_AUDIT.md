@@ -5,9 +5,9 @@ requirement is finished. The supplied plan ends partway through section 15.
 The repository layouts and code fragments are interpreted as architectural
 examples; the behavior and named public concepts remain the requirements.
 
-Evidence base: the six-package workspace through GEOS c2924fa (agent migration, optional
-specialist profiles, regression comparison, debug repair, and proposal feedback), Controller cb4e9e4, Agents ada79d8,
-Science 7e52eec, Core deaf21a, and HPC e076bc8. The complete local suite passes 140 tests,
+Evidence base: the six-package workspace through GEOS 0a87aa6 (agent migration, optional
+specialist profiles, regression comparison, debug repair, proposal feedback, and accepted-candidate continuation), Controller ab80d0b plus parent-context delivery, Agents ada79d8,
+Science 7e52eec, Core 5669d9a, and HPC e076bc8. The complete local suite passes 145 tests,
 with the documented optional NetCDF warning. Plot tests cover aligned 1-D/2-D
 rendering, failed-validation retention, sealing, and modified-artifact detection.
 Profile tests cover repository/objective selection, scoped source/timing evidence,
@@ -20,6 +20,10 @@ a bad repair, a protected harness edit, a changed reference, wrong scientific ou
 and a scripted runtime retry using prior failure evidence. Public CLI run/resume were also exercised on the synthetic fixture.
 Proposal feedback tests verify that the next attempt receives the exact failed patch,
 large proposals are explicitly truncated, and hashes identify full sealed artifacts.
+Continuation tests verify resume, accepted-parent reconstruction after rejection,
+fixed original baseline measurements, cumulative file changes, corruption rejection,
+and rejection of changed original commits. Timings in that test are scripted inputs,
+not measured GEOS performance.
 Passing tests below establish only the behavior they exercise.
 
 ## Architectural principles (section 1)
@@ -76,7 +80,7 @@ Passing tests below establish only the behavior they exercise.
 | Identify bottlenecks and generate/select hypotheses | Runtime receives source, timings, profiler excerpts and history | Evidence delivery implemented; model interpretation/selection quality unverified. No universal profiler parser. |
 | Modify, build, run; debug after failure | Checked patches; task-failure feedback; synthetic compile-fail/repair integration test | Candidate repair loop demonstrated with scripted local proposals; live scientific debugging unverified. |
 | Numerical/science/performance evaluation and promotion | Registered gates and best/latest pointers | Implemented for configured policies. |
-| Reprofile when target unmet | Candidate profiling added after candidate benchmark; output enters later task-result feedback | Baseline and candidate profiling available. Source trials still start from the original baseline, not automatic checkout of the best candidate. |
+| Reprofile when target unmet | Candidate profiling added after candidate benchmark; output enters later task-result feedback | Baseline and candidate profiling available. Default trials start from original source. Opt-in best-valid continuation reconstructs the accepted candidate from verified cumulative proposals and supplies its recorded profile/benchmark/validation evidence. Original baseline is remeasured each attempt. |
 | Bare `atom run --system geos 'Achieve >=3x...'` | CLI requires site config or demo and explicit target | Not supported literally. Site configuration and acceptance policy cannot be safely guessed. |
 | Actual >=3x GEOS GPU acceleration with scientific validity | No matched production GEOS experiment | Not demonstrated; Discover validation remains deferred per user direction. |
 
@@ -89,7 +93,7 @@ Passing tests below establish only the behavior they exercise.
 | Profile JSON, timing CSV, numerical/science metrics, plots, evaluation JSON | Profile JSON, per-phase timing CSV; automatic controller Markdown/evaluation JSON/metric CSV; field data and optional Science plots | JSON/CSV/report exports implemented and sealed for new attempts; selected 1-D/2-D scientific comparison plots are generated during GEOS validation and sealed with the experiment. Model-specific selection and geographic diagnostics remain site-owned. |
 | Experiment ledger as planner memory | Store history, CLI ledger, structured feedback | Implemented; demo table provides readable decisions. |
 | Isolated experiment workspaces and source preservation | GEOSWorkspace/PatchManager, clean/stale/path checks, original-source regression tests | Implemented. |
-| best_valid_candidate, latest_candidate, baseline | Controller checkpoints and promotion tests | Implemented; best pointer does not automatically merge or rebase source. |
+| best_valid_candidate, latest_candidate, baseline | Controller checkpoints and promotion tests | Implemented; GEOS can opt into verified reconstruction of the selected parent. Default behavior does not change source. |
 | Software compilation/tests/sanitizers | GEOS software_checks; geos.test/geos.sanitize; separate geos.tests/geos.sanitizers evaluators and software evidence requirements | Implemented as explicit configurable stages for both phases. Synthetic success/failure/omission tests pass; actual site sanitizer coverage remains unverified. Empty configuration means those checks were not required. |
 | Numerical checkpoint comparison/tolerances/reproducibility | Field comparison, bitwise/tolerance options | Partial: generic arrays supported; actual GEOS restart/checkpoint reproducibility policy and experiments absent. |
 | Scientific evaluator tree | Submitted section ends after `Science` | Earlier numerical/science/performance requirements implemented generically; no additional missing text assumed. |
@@ -99,7 +103,7 @@ Passing tests below establish only the behavior they exercise.
 1. Evaluate the implemented debug workflow against expert-curated real failures and approved reference/acceptance policies; synthetic reproduction and repair checks are implemented.
 2. Exercise the newly implemented test/sanitizer stages with the actual model suites and instrumented commands when site tooling is available.
 3. Extend configured comparison plots with model-specific diagnostics and appropriate geographic views when domain requirements are available.
-4. Prior proposal content is now carried as bounded, hash-identified feedback. Implement deliberate continuation/rebasing from accepted candidates if iterative source accumulation is required; current trials use replacement proposals against original source.
+4. Exercise opt-in best-valid continuation on representative GEOS modernization tasks. Local synthetic tests verify accumulation, resume, rejection, corrupted evidence, and original-source preservation; real model acceptance remains unverified.
 5. Extend meaningful model diagnostics and examples without claiming untested physical validity.
 
 Discover execution, model-specific acceptance criteria, live provider assessment,
