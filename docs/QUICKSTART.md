@@ -37,7 +37,7 @@ The demo executes three real experiments:
 
 Every attempt compiles the source and runs it in a separate local process through the HPC package. A monotonic application timer measures three trials after a warmup. The Science package compares multiple input/output pairs against the reference. Controller evaluators decide acceptance; a speedup cannot override incorrect results.
 
-These are **prepared candidates**, so the run is reproducible and requires no agent provider. The demonstration illustrates a dramatic algorithmic simplification, not a GPU transformation. Timings vary by host and must never be reported as GEOS performance. Extremely unusual host conditions can leave the target unmet; ATOM then reports `no_more_plans` rather than changing the criteria.
+These are **prepared candidates**, so the run is reproducible and requires no agent provider. The demonstration illustrates a dramatic algorithmic simplification, not a GPU transformation. Timings vary by host and must never be reported as GEOS performance. Extremely unusual host conditions can leave the target unmet; ATOM then reports `budget_exhausted` rather than changing the criteria.
 
 ## Watch pause and resume
 

@@ -198,6 +198,13 @@ class ToyPlanner(Planner):
 
 
 async def run_demo(root: Path, *, resume=False, pause_after: int | None = None):
+    try:
+        import nexus_atom_hpc  # noqa: F401
+        import nexus_atom_science  # noqa: F401
+    except ImportError as exc:
+        raise ValueError(
+            "The demo requires nexus-atom-hpc and nexus-atom-science; install the controller demo extra with sibling packages"
+        ) from exc
     root = root.resolve()
     store = Store(root)
     try:
@@ -234,7 +241,7 @@ async def run_demo(root: Path, *, resume=False, pause_after: int | None = None):
                 e for e in experiment.evaluations if e.evaluator == "toy.correctness"
             )
             speedup = next(
-                e.metrics["speedup"]
+                e.metrics.get("speedup")
                 for e in experiment.evaluations
                 if e.evaluator == "toy.performance"
             )
@@ -249,8 +256,9 @@ async def run_demo(root: Path, *, resume=False, pause_after: int | None = None):
                 "experiment_id": experiment.id,
             }
             rows.append(row)
+            measured_text = f"{speedup:.2f}x" if speedup is not None else "unavailable"
             print(
-                f"{variant:12} {'PASS' if correctness.passed else 'FAIL':14} {speedup:9.2f}x    {decision}",
+                f"{variant:12} {'PASS' if correctness.passed else 'FAIL':14} {measured_text:>10}    {decision}",
                 flush=True,
             )
         report = {
@@ -272,10 +280,13 @@ async def run_demo(root: Path, *, resume=False, pause_after: int | None = None):
             "| Candidate | Correctness | Measured speedup | Decision |",
             "|---|---|---:|---|",
         ]
-        lines += [
-            f"| {r['candidate']} | {'PASS' if r['correctness'] else 'FAIL'} | {r['speedup']:.2f}× | {r['decision']} |"
-            for r in rows
-        ]
+        for row in rows:
+            measured_text = (
+                f"{row['speedup']:.2f}×" if row["speedup"] is not None else "unavailable"
+            )
+            lines.append(
+                f"| {row['candidate']} | {'PASS' if row['correctness'] else 'FAIL'} | {measured_text} | {row['decision']} |"
+            )
         lines += [
             "",
             "State is stored in `state.sqlite`. Each experiment retains source, build/run logs, raw timings and immutable evaluator evidence.",
